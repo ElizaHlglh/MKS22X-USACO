@@ -12,8 +12,13 @@ public class USACO{
     ArrayList<String> brLines = new ArrayList<String>();
     File file = new File(filename);
     Scanner info = new Scanner(file);
-    while(info.hasNextLine()){
+    while(info.hasNextLine()){ //store info of every line
       brLines.add(info.nextLine());
+    }
+    ArrayList<Integer> firstLine = bronzeBreakStr(brLines.get(0));
+    int[][] map = new int[firstLine.get(0)][firstLine.get(1)];
+    for (int r = 1; r < firstLine.get(3); r++){ //create the map by getting the row number and just add each int from brLines to the map
+
     }
     return 1;
   }
