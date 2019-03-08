@@ -32,12 +32,59 @@ public class USACO{
       }
       System.out.println();
     }
+    System.out.println();
+
+    //start trimming the land:
+    //check every number of command/changes
+    //from the end of the map info to the end of the
+    for (int ch = map.length+1; ch < brLines.size(); ch++){
+      ArrayList<Integer> thisLine = bronzeBreakStr(brLines.get(ch));
+      System.out.println("ThisLine testing : " + thisLine);
+      map = bronzeH(map, thisLine.get(0), thisLine.get(1), thisLine.get(2));
+      for (int row = 0; row < map.length; row++){
+        for (int col = 0; col < map[row].length; col++){
+          System.out.print(map[row][col] + " ");
+        }
+        System.out.println();
+      }
+    }
+    for (int row = 0; row < map.length; row++){
+      for (int col = 0; col < map[row].length; col++){
+        System.out.print(map[row][col] + " ");
+      }
+      System.out.println();
+    }
     return 1;
   }
 
-  //public int[][] bronzeH(int[][] land, int r, int c, int size){
+  public static int[][] bronzeH(int[][] land, int r, int c, int size){
 //help to shrink/trim the land
-  //}
+    //find the largest land size first
+    ArrayList<Integer> height = new ArrayList<Integer>();
+    int[] moveR = {-1,-1,-1, 0,0,0, 1,1,1};
+    int[] moveC = {-1, 0, 1,-1,0,1,-1,0,1};
+    for (int i = 0; i<moveR.length; i++){ //collects the height of the 3x3 grid
+      if ((r+moveR[i] >= 0 && r+moveR[i] < land.length) && (c+moveC[i] >= 0 && c+moveC[i] < land[0].length)){
+        height.add(land[r+moveR[i]][c+moveC[i]]);
+      }
+    }
+    Collections.sort(height); //sort the height
+    System.out.println("Height : " + height);
+    int after = 0;
+    for (int z = 0; z<moveR.length; z++){ //modify the largest height
+      if (land[r+moveR[z]][r+moveC[z]] == height.get(height.size()-1)){
+        land[r+moveR[z]][r+moveC[z]] -= size;
+        after = land[r+moveR[z]][r+moveC[z]];
+      }
+    }
+
+    for (int z = 0; z<moveR.length; z++){ //modify the other heights to be the same as the largest after trimming
+      if (land[r+moveR[z]][r+moveC[z]] >= after){
+        land[r+moveR[z]][r+moveC[z]] = after;
+      }
+    }
+    return land;
+  }
 
   public static ArrayList<Integer> bronzeBreakStr(String info){ //given a string, return an array of int in it
     int intcount = 0;
