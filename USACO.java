@@ -15,10 +15,22 @@ public class USACO{
     while(info.hasNextLine()){ //store info of every line
       brLines.add(info.nextLine());
     }
+    System.out.println(brLines);
     ArrayList<Integer> firstLine = bronzeBreakStr(brLines.get(0));
     int[][] map = new int[firstLine.get(0)][firstLine.get(1)];
-    for (int r = 1; r < firstLine.get(3); r++){ //create the map by getting the row number and just add each int from brLines to the map
-
+    for (int r = 1; r < brLines.size() - firstLine.get(3); r++){ //create the map by getting the row number and just add each int from brLines to the map
+      ArrayList<Integer> currentLine = bronzeBreakStr(brLines.get(r));
+      System.out.println(currentLine);
+      for (int c = 0; c < currentLine.size(); c++){
+        map[r-1][c] = currentLine.get(c);
+      }
+    }
+    //testing purpose
+    for (int row = 0; row < map.length; row++){
+      for (int col = 0; col < map[row].length; col++){
+        System.out.print(map[row][col] + " ");
+      }
+      System.out.println();
     }
     return 1;
   }
