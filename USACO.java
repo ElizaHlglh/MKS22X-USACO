@@ -4,6 +4,7 @@ public class USACO{
 
   private int[][] bronzeInfo;
   private ArrayList<String> brLines;
+  private static char[][] silverMap;
 
   //bronze: take the file and read into it.
   //1. has info on the size of land, water size, and number of trimming
@@ -133,11 +134,54 @@ public class USACO{
     return ans;
   }
 
-  /*public static int silver(String filename){
+  public static int silver(String filename) throws FileNotFoundException{
 //how many ways in 6 steps/seconds can reach final spot
 //can't return to previous spots
 //planning: create a second board to show possible location and place (-) on previous spot
     //try catch Scanner
+    ArrayList<String> slLines = new ArrayList<String>();
+    File file = new File(filename);
+    Scanner info = new Scanner(file);
+    while(info.hasNextLine()){ //store info of every line
+      slLines.add(info.nextLine());
+    }
+    System.out.println(slLines);
+    ArrayList<Integer> firstLine = bronzeBreakStr(slLines.get(0));//get the first line with the info of the map size and number of steps
+    silverMap = new char[firstLine.get(0)][firstLine.get(1)];
+    for (int r = 1; r < slLines.size() - 1; r++){ //create the map by getting the row number and just add each char from slLines to the map
+      ArrayList<Character> currentLine = silverBreakeStr(slLines.get(r));
+      System.out.println("CurrenLIne : " + currentLine);
+      for (int c = 0; c < currentLine.size(); c++){
+        silverMap[r-1][c] = currentLine.get(c);
+      }
+    }
+    //testing purpose:
+    for (int row = 0; row < silverMap.length; row++){
+      for (int col = 0; col < silverMap[row].length; col++){
+        System.out.print(silverMap[row][col] + " ");
+      }
+      System.out.println();
+    }
     return 1;
-  }*/
+  }
+
+  public static boolean solveAll(int r, int c, int limit){
+    return true;
+  }
+
+  public boolean walk(int r, int c){
+    if (silverMap[r][c] == '.'){
+      silverMap[r][c] = '-';
+      return true;
+    }
+    return false;
+  }
+
+  public static ArrayList<Character> silverBreakeStr(String info){
+    ArrayList<Character> ans = new ArrayList<Character>();
+    for (int i = 0; i < info.length(); i++){
+      ans.add(info.charAt(i));
+    }
+    return ans;
+  }
 }

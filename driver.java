@@ -1,4 +1,4 @@
-/*import java.io.File;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class driver{
@@ -9,13 +9,14 @@ public class driver{
         System.out.println("Testing int extraction: ");
         System.out.println(USACO.bronzeBreakStr(test1));
         System.out.println(USACO.bronze("testCases/makelake.1.in"));
+        System.out.println(USACO.silver("testCases/ctravel.1.in"));
       }
     catch(FileNotFoundException e){
       System.out.println("Invalid filename: ");
     }
   }
-}*/
-import java.util.Scanner;
+}
+/*import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 //DRIVER BORROWED FROM GOOGLE GROUP, CREDITS TO: Bryant Stringham and Derek Lao
@@ -48,5 +49,5 @@ public class driver {
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }*/
-    }
-}
+  //  }
+//}*/
