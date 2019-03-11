@@ -165,11 +165,13 @@ public class USACO{
     }
 
     ArrayList<Integer> lastLine = bronzeBreakStr(slLines.get(slLines.size()-1));//get the last line withcoodrinates pf start and end point.
-    int[] moveR = {-1,-1,-1, 0,0,0, 1,1,1};
-    int[] moveC = {-1, 0, 1,-1,0,1,-1,0,1};
+    int[] moveR = {1,-1, 0, 0};
+    int[] moveC = {0, 0,-1, 1};
     int silverCount = 0;
-    walk(lastLine.get(0), lastLine.get(1));
-    solveAll(lastLine.get(0), lastLine.get(1), lastLine.get(2), lastLine.get(3), 0, firstLine.get(2), moveR, moveC);
+    walk(lastLine.get(0)-1, lastLine.get(1)-1);
+    //need to - 1 because row 1 from question == row zero of silverMap;
+    solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2), moveR, moveC);
+    System.out.println("Silver after soveAll: " + silverCount);
     return silverCount;
   }
 
@@ -179,7 +181,9 @@ public class USACO{
     }
     if (r == goalR && c == goalC && time <= limit){
       silverCount++;
-      return true;
+      /*System.out.println("Current silveCount: " + silverCount);
+      System.out.println("Current time: " + time);
+      return true;*/
     }
     else{
       for (int i = 0; i < moveR.length; i++){
@@ -189,13 +193,16 @@ public class USACO{
         }
       }
     }
+    System.out.println(silverCount);
     return false;
   }
 
   public static boolean walk(int r, int c){
-    if (silverMap[r][c] == '.'){
-      silverMap[r][c] = '-';
-      return true;
+    if (r >= 0 && r < silverMap.length && c >= 0 && c < silverMap[0].length){
+      if (silverMap[r][c] == '.'){
+        silverMap[r][c] = '-';
+        return true;
+      }
     }
     return false;
   }

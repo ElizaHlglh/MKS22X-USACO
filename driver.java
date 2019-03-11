@@ -9,7 +9,7 @@ public class driver{
         System.out.println("Testing int extraction: ");
         System.out.println(USACO.bronzeBreakStr(test1));
         System.out.println(USACO.bronze("testCases/makelake.1.in"));
-        System.out.println(USACO.silver("testCases/ctravel.1.in"));
+        System.out.println(USACO.silver("testCases/ctravel.2.in"));
       }
     catch(FileNotFoundException e){
       System.out.println("Invalid filename: ");
