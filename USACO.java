@@ -5,6 +5,7 @@ public class USACO{
   private int[][] bronzeInfo;
   private ArrayList<String> brLines;
   private static char[][] silverMap;
+  private static int silverCount;
 
   //bronze: take the file and read into it.
   //1. has info on the size of land, water size, and number of trimming
@@ -162,19 +163,45 @@ public class USACO{
       }
       System.out.println();
     }
-    return 1;
+
+    ArrayList<Integer> lastLine = bronzeBreakStr(slLines.get(slLines.size()-1));//get the last line withcoodrinates pf start and end point.
+    int[] moveR = {-1,-1,-1, 0,0,0, 1,1,1};
+    int[] moveC = {-1, 0, 1,-1,0,1,-1,0,1};
+    int silverCount = 0;
+    walk(lastLine.get(0), lastLine.get(1));
+    solveAll(lastLine.get(0), lastLine.get(1), lastLine.get(2), lastLine.get(3), 0, firstLine.get(2), moveR, moveC);
+    return silverCount;
   }
 
-  public static boolean solveAll(int r, int c, int limit){
-    return true;
+  public static boolean solveAll(int r, int c, int goalR, int goalC, int time, int limit, int[] moveR, int[] moveC){
+    if (time > limit){
+      return false;
+    }
+    if (r == goalR && c == goalC && time <= limit){
+      silverCount++;
+      return true;
+    }
+    else{
+      for (int i = 0; i < moveR.length; i++){
+        if (walk(r+moveR[i],c+moveC[i])){
+          solveAll(r+moveR[i], c+moveC[i], goalR, goalC, time+1, limit, moveR, moveC);
+          back(r+moveR[i], c+moveC[i]);
+        }
+      }
+    }
+    return false;
   }
 
-  public boolean walk(int r, int c){
+  public static boolean walk(int r, int c){
     if (silverMap[r][c] == '.'){
       silverMap[r][c] = '-';
       return true;
     }
     return false;
+  }
+
+  public static void back(int r, int c){
+    silverMap[r][c] = '.';
   }
 
   public static ArrayList<Character> silverBreakeStr(String info){
