@@ -6,6 +6,8 @@ public class USACO{
   private ArrayList<String> brLines;
   private static char[][] silverMap;
   private static int silverCount;
+  private static int[] moveR;
+  private static int[] moveC;
 
   //bronze: take the file and read into it.
   //1. has info on the size of land, water size, and number of trimming
@@ -135,6 +137,9 @@ public class USACO{
     return ans;
   }
 
+
+
+
   public static int silver(String filename) throws FileNotFoundException{
 //how many ways in 6 steps/seconds can reach final spot
 //can't return to previous spots
@@ -165,35 +170,45 @@ public class USACO{
     }
 
     ArrayList<Integer> lastLine = bronzeBreakStr(slLines.get(slLines.size()-1));//get the last line withcoodrinates pf start and end point.
-    int[] moveR = {1,-1, 0, 0};
-    int[] moveC = {0, 0,-1, 1};
+    moveR = new int[]{1,-1, 0, 0};
+    moveC = new int[]{0, 0,-1, 1};
     int silverCount = 0;
     walk(lastLine.get(0)-1, lastLine.get(1)-1);
     //need to - 1 because row 1 from question == row zero of silverMap;
-    solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2), moveR, moveC);
+    solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2));
     System.out.println("Silver after soveAll: " + silverCount);
     return silverCount;
   }
 
-  public static boolean solveAll(int r, int c, int goalR, int goalC, int time, int limit, int[] moveR, int[] moveC){
+  public static boolean solveAll(int r, int c, int goalR, int goalC, int time, int limit){
     if (time > limit){
       return false;
     }
     if (r == goalR && c == goalC && time <= limit){
       silverCount++;
-      /*System.out.println("Current silveCount: " + silverCount);
-      System.out.println("Current time: " + time);
-      return true;*/
+      System.out.println("silverCount: " + silverCount);
+      return true;
     }
     else{
-      for (int i = 0; i < moveR.length; i++){
-        if (walk(r+moveR[i],c+moveC[i])){
-          solveAll(r+moveR[i], c+moveC[i], goalR, goalC, time+1, limit, moveR, moveC);
-          back(r+moveR[i], c+moveC[i]);
+      //find all possible coordinates:
+      ArrayList<Integer> RowList = new ArrayList<Integer>();
+      ArrayList<Integer> ColList = new ArrayList<Integer>();
+      for (int i = 0; i < 4; i++){
+        if (r+moveR[i] < silverMap.length && r+moveR[i] >= 0 && c+moveC[i] >= 0 && c+moveC[i] < silverMap[0].length){
+          if (silverMap[r+moveR[i]][c+moveC[i]] == '.'){
+            RowList.add(r+moveR[i]);
+            ColList.add(c+moveC[i]);
+          }
+        }
+      }
+      //loop through the coordinates to see if it can reach a solution
+      for (int l = 0; l < RowList.size(); l++){
+        if (walk(RowList.get(l), ColList.get(l))){
+          solveAll(RowList.get(l), ColList.get(l), goalR, goalC, time+1, limit);
+          back(RowList.get(l), ColList.get(l));
         }
       }
     }
-    System.out.println(silverCount);
     return false;
   }
 
