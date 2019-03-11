@@ -8,6 +8,11 @@ public class USACO{
   private static int silverCount;
   private static int[] moveR;
   private static int[] moveC;
+  private int count;
+
+  public USACO(){
+    count = 0;
+  }
 
   //bronze: take the file and read into it.
   //1. has info on the size of land, water size, and number of trimming
@@ -151,23 +156,23 @@ public class USACO{
     while(info.hasNextLine()){ //store info of every line
       slLines.add(info.nextLine());
     }
-    System.out.println(slLines);
+    //System.out.println(slLines);
     ArrayList<Integer> firstLine = bronzeBreakStr(slLines.get(0));//get the first line with the info of the map size and number of steps
     silverMap = new char[firstLine.get(0)][firstLine.get(1)];
     for (int r = 1; r < slLines.size() - 1; r++){ //create the map by getting the row number and just add each char from slLines to the map
       ArrayList<Character> currentLine = silverBreakeStr(slLines.get(r));
-      System.out.println("CurrenLIne : " + currentLine);
+      //System.out.println("CurrenLIne : " + currentLine);
       for (int c = 0; c < currentLine.size(); c++){
         silverMap[r-1][c] = currentLine.get(c);
       }
     }
     //testing purpose:
-    for (int row = 0; row < silverMap.length; row++){
+    /*for (int row = 0; row < silverMap.length; row++){
       for (int col = 0; col < silverMap[row].length; col++){
         System.out.print(silverMap[row][col] + " ");
       }
       System.out.println();
-    }
+    }*/
 
     ArrayList<Integer> lastLine = bronzeBreakStr(slLines.get(slLines.size()-1));//get the last line withcoodrinates pf start and end point.
     moveR = new int[]{1,-1, 0, 0};
@@ -176,22 +181,49 @@ public class USACO{
     walk(lastLine.get(0)-1, lastLine.get(1)-1);
     //need to - 1 because row 1 from question == row zero of silverMap;
     solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2));
-    System.out.println("Silver after soveAll: " + silverCount);
-    return silverCount;
+    //System.out.println("Silver after soveAll: " + silverCount);
+    int ans = silverCount;
+    silverCount = 0;
+    return ans;
   }
 
   public static boolean solveAll(int r, int c, int goalR, int goalC, int time, int limit){
+    /*if(true){
+      clearTerminal();
+      for (int row = 0; row < silverMap.length; row++){
+        for (int col = 0; col < silverMap[row].length; col++){
+          System.out.print(silverMap[row][col] + " ");
+        }
+        System.out.println();
+      }
+      wait(200);
+    }*/
     if (time > limit){
       return false;
     }
-    if (r == goalR && c == goalC && time <= limit){
+    if (r == goalR && c == goalC && time == limit){
       silverCount++;
       System.out.println("silverCount: " + silverCount);
+      /*System.out.println("map at a solution: ");
+      for (int row = 0; row < silverMap.length; row++){
+        for (int col = 0; col < silverMap[row].length; col++){
+          System.out.print(silverMap[row][col] + " ");
+        }
+        System.out.println();
+      }
+      System.out.println();*/
       return true;
     }
     else{
+      for (int i = 0; i < 4; i++){
+        if (walk(r+moveR[i], c+moveC[i])){
+          solveAll(r+moveR[i], c+moveC[i], goalR, goalC, time+1, limit);
+          //back(r+moveR[i], c+moveC[i]);
+          //back(r+moveR[i], c+moveC[i]);
+        }
+      }
       //find all possible coordinates:
-      ArrayList<Integer> RowList = new ArrayList<Integer>();
+    /*  ArrayList<Integer> RowList = new ArrayList<Integer>();
       ArrayList<Integer> ColList = new ArrayList<Integer>();
       for (int i = 0; i < 4; i++){
         if (r+moveR[i] < silverMap.length && r+moveR[i] >= 0 && c+moveC[i] >= 0 && c+moveC[i] < silverMap[0].length){
@@ -207,18 +239,22 @@ public class USACO{
           solveAll(RowList.get(l), ColList.get(l), goalR, goalC, time+1, limit);
           back(RowList.get(l), ColList.get(l));
         }
-      }
+      }*/
     }
     return false;
   }
 
   public static boolean walk(int r, int c){
     if (r >= 0 && r < silverMap.length && c >= 0 && c < silverMap[0].length){
-      if (silverMap[r][c] == '.'){
-        silverMap[r][c] = '-';
+      /*if (silverMap[r][c] == '.'){
+        //silverMap[r][c] = '-';
         return true;
-      }
+      }*/
+      if (silverMap[r][c] != '*'){
+        //silverMap[r][c] = '-';
+        return true;
     }
+  }
     return false;
   }
 
@@ -232,5 +268,21 @@ public class USACO{
       ans.add(info.charAt(i));
     }
     return ans;
+  }
+
+  private static void wait(int millis){
+       try {
+           Thread.sleep(millis);
+       }
+       catch (InterruptedException e) {
+       }
+   }
+
+  public static void clearTerminal(){
+
+      //erase terminal, go to top left of screen.
+
+      System.out.println("\033[2J\033[1;1H");
+
   }
 }
