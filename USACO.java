@@ -142,14 +142,16 @@ public class USACO{
     return ans;
   }
 
-
+  public static ArrayList<Character> silverBreakeStr(String info){
+    ArrayList<Character> ans = new ArrayList<Character>();
+    for (int i = 0; i < info.length(); i++){
+      ans.add(info.charAt(i));
+    }
+    return ans;
+  }
 
 
   public static int silver(String filename) throws FileNotFoundException{
-//how many ways in 6 steps/seconds can reach final spot
-//can't return to previous spots
-//planning: create a second board to show possible location and place (-) on previous spot
-    //try catch Scanner
     ArrayList<String> slLines = new ArrayList<String>();
     File file = new File(filename);
     Scanner info = new Scanner(file);
@@ -166,123 +168,47 @@ public class USACO{
         silverMap[r-1][c] = currentLine.get(c);
       }
     }
-    //testing purpose:
-    /*for (int row = 0; row < silverMap.length; row++){
-      for (int col = 0; col < silverMap[row].length; col++){
-        System.out.print(silverMap[row][col] + " ");
-      }
-      System.out.println();
-    }*/
-
     ArrayList<Integer> lastLine = bronzeBreakStr(slLines.get(slLines.size()-1));//get the last line withcoodrinates pf start and end point.
     moveR = new int[]{1,-1, 0, 0};
     moveC = new int[]{0, 0,-1, 1};
     int silverCount = 0;
     walk(lastLine.get(0)-1, lastLine.get(1)-1);
     //need to - 1 because row 1 from question == row zero of silverMap;
-    solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2));
-    //System.out.println("Silver after soveAll: " + silverCount);
-    int ans = silverCount;
-    silverCount = 0;
-    return ans;
+    return solveAll(lastLine.get(0)-1, lastLine.get(1)-1, lastLine.get(2)-1, lastLine.get(3)-1, 0, firstLine.get(2), 0);
   }
 
-  public static boolean solveAll(int r, int c, int goalR, int goalC, int time, int limit){
-    /*if(true){
-      clearTerminal();
-      for (int row = 0; row < silverMap.length; row++){
-        for (int col = 0; col < silverMap[row].length; col++){
-          System.out.print(silverMap[row][col] + " ");
-        }
-        System.out.println();
-      }
-      wait(200);
-    }*/
+  public static int solveAll(int r, int c, int goalR, int goalC, int time, int limit, int number){
     if (time > limit){
-      return false;
+      return 0;
     }
-    if (r == goalR && c == goalC && time == limit){
-      silverCount++;
-      System.out.println("silverCount: " + silverCount);
-      /*System.out.println("map at a solution: ");
-      for (int row = 0; row < silverMap.length; row++){
-        for (int col = 0; col < silverMap[row].length; col++){
-          System.out.print(silverMap[row][col] + " ");
-        }
-        System.out.println();
+    else if (time == limit){
+      if (r == goalR && c == goalC ){
+        return 1;
       }
-      System.out.println();*/
-      return true;
+      else{
+        return 0;
+      }
     }
     else{
+      number = 0;
       for (int i = 0; i < 4; i++){
         if (walk(r+moveR[i], c+moveC[i])){
-          solveAll(r+moveR[i], c+moveC[i], goalR, goalC, time+1, limit);
-          //back(r+moveR[i], c+moveC[i]);
-          //back(r+moveR[i], c+moveC[i]);
+          number += solveAll(r+moveR[i], c+moveC[i], goalR, goalC, time+1, limit, number);
         }
       }
-      //find all possible coordinates:
-    /*  ArrayList<Integer> RowList = new ArrayList<Integer>();
-      ArrayList<Integer> ColList = new ArrayList<Integer>();
-      for (int i = 0; i < 4; i++){
-        if (r+moveR[i] < silverMap.length && r+moveR[i] >= 0 && c+moveC[i] >= 0 && c+moveC[i] < silverMap[0].length){
-          if (silverMap[r+moveR[i]][c+moveC[i]] == '.'){
-            RowList.add(r+moveR[i]);
-            ColList.add(c+moveC[i]);
-          }
-        }
-      }
-      //loop through the coordinates to see if it can reach a solution
-      for (int l = 0; l < RowList.size(); l++){
-        if (walk(RowList.get(l), ColList.get(l))){
-          solveAll(RowList.get(l), ColList.get(l), goalR, goalC, time+1, limit);
-          back(RowList.get(l), ColList.get(l));
-        }
-      }*/
     }
-    return false;
+    return number;
   }
 
   public static boolean walk(int r, int c){
     if (r >= 0 && r < silverMap.length && c >= 0 && c < silverMap[0].length){
-      /*if (silverMap[r][c] == '.'){
-        //silverMap[r][c] = '-';
-        return true;
-      }*/
       if (silverMap[r][c] != '*'){
-        //silverMap[r][c] = '-';
         return true;
-    }
+      }
+      else{
+        return false;
+      }
   }
     return false;
-  }
-
-  public static void back(int r, int c){
-    silverMap[r][c] = '.';
-  }
-
-  public static ArrayList<Character> silverBreakeStr(String info){
-    ArrayList<Character> ans = new ArrayList<Character>();
-    for (int i = 0; i < info.length(); i++){
-      ans.add(info.charAt(i));
-    }
-    return ans;
-  }
-
-  private static void wait(int millis){
-       try {
-           Thread.sleep(millis);
-       }
-       catch (InterruptedException e) {
-       }
-   }
-
-  public static void clearTerminal(){
-
-      //erase terminal, go to top left of screen.
-
-      System.out.println("\033[2J\033[1;1H");
-
   }
 }
